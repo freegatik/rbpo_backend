@@ -1,0 +1,27 @@
+# Gradle
+.gradle/
+build/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# App
+*.log
+*.pid
+src/main/resources/keystore.jks
+src/main/resources/*.jks
+
+# Secrets (do not commit)
+.env
+.env.local
+*.pem
