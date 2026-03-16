@@ -1,67 +1,47 @@
 # RBPO Backend
 
-Бэкенд на Spring Boot: аутентификация (JWT access/refresh), ролевая авторизация, HTTPS, PostgreSQL.
+Spring Boot, JWT (access/refresh), роли USER/ADMIN/GUEST, PostgreSQL.
 
-## Стек
+Java 21, Spring Security, JPA, Gradle.
 
-- Java 21, Spring Boot 3.3
-- Spring Security, JWT (jjwt)
-- Spring Data JPA, PostgreSQL
-- Gradle
+**Запуск**
 
-## Требования
-
-- Java 21+
-- PostgreSQL 12+ (для запуска приложения)
-
-## Запуск
+PostgreSQL должен быть запущен. Один раз:
 
 ```bash
-# БД и учётные данные (при необходимости)
-export DB_URL=jdbc:postgresql://localhost:5432/rbpodb
-export DB_USERNAME=rbpo
-export DB_PASSWORD=rbpo
-
-# Без HTTPS (если нет keystore)
-export SSL_ENABLED=false
-
-./gradlew bootRun
+chmod +x scripts/setup-db.sh && ./scripts/setup-db.sh
 ```
 
-Порт по умолчанию: **8081**.
+Потом:
 
-## Конфигурация
+```bash
+./run-local.sh
+```
 
-Основные переменные окружения и секреты для локального запуска и CI описаны в [SECRETS.md](SECRETS.md).
+Порт 8081. HTTPS в профиле `local` выключен.
 
-## API
+Переменные БД по умолчанию: база `rbpodb`, юзер `rbpo`, пароль `rbpo`. Свои — `DB_NAME`, `DB_USER`, `DB_PASSWORD` перед вызовом `setup-db.sh`; для приложения — `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`. Остальное в [SECRETS.md](SECRETS.md).
 
-### Аутентификация
+**API**
 
 | Метод | Путь | Описание |
 |-------|------|----------|
 | POST | `/api/auth/register` | Регистрация |
-| POST | `/api/auth/login` | Логин (access + refresh токены) |
-| POST | `/api/auth/refresh` | Обновление токенов |
-| GET  | `/api/auth/me` | Текущий пользователь (требуется `Authorization: Bearer <accessToken>`) |
+| POST | `/api/auth/login` | Логин, в ответе access + refresh |
+| POST | `/api/auth/refresh` | Обновление пары токенов |
+| GET | `/api/auth/me` | Текущий юзер, заголовок `Authorization: Bearer <token>` |
 
-Роли: **USER**, **ADMIN**, **GUEST**. Публичные маршруты: register, login, refresh; остальные — по правилам в `SecurityConfig`.
+Тестовые юзеры после старта: `admin` / `Admin123!@#`, `testuser` / `Test123!@#`.
 
-### Тестовые пользователи
+**Postman**
 
-При первом запуске создаются:
+Import → `postman/rbpo-backend.postman_collection.json`. `baseUrl` = http://localhost:8081. После любого Login токен пишется в переменные коллекции, в Me подставляется сам.
 
-| Роль  | Username   | Password      |
-|-------|------------|---------------|
-| ADMIN | `admin`    | `Admin123!@#` |
-| USER  | `testuser` | `Test123!@#`  |
-
-## Сборка и тесты
+**Сборка**
 
 ```bash
-./gradlew test      # тесты
-./gradlew build     # сборка
-./gradlew bootJar   # JAR
+./gradlew test
+./gradlew bootJar
 ```
 
-CI (GitHub Actions): при push/PR в `main` и `develop` выполняются тесты и сборка, артефакт JAR сохраняется в Actions.
+В CI на push в `main`/`develop` — тесты, сборка, артефакт JAR.
