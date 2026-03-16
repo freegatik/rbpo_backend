@@ -50,6 +50,14 @@ chmod +x scripts/setup-db.sh && ./scripts/setup-db.sh
 | POST | `/api/licenses/activate` | Активация лицензии, тело: activationKey, deviceMac, deviceName?; ответ: TicketResponse |
 | POST | `/api/licenses/check` | Проверка лицензии, тело: deviceMac, productId; ответ: TicketResponse |
 | POST | `/api/licenses/renew` | Продление лицензии, тело: activationKey; ответ: TicketResponse |
+| GET | `/api/signatures` | Полная база сигнатур (только ACTUAL), USER/ADMIN |
+| GET | `/api/signatures/increment?since=<ISO-8601>` | Инкремент изменений (updatedAt > since), USER/ADMIN |
+| POST | `/api/signatures/by-ids` | Сигнатуры по списку UUID, тело: `{"ids":["uuid",...]}`, USER/ADMIN |
+| POST | `/api/signatures` | Создание сигнатуры (ADMIN), тело: threatName, firstBytesHex, remainderHashHex, remainderLength, fileType, offsetStart, offsetEnd |
+| PUT | `/api/signatures/{id}` | Обновление сигнатуры (ADMIN) |
+| DELETE | `/api/signatures/{id}` | Логическое удаление (ADMIN), 204 No Content |
+| GET | `/api/signatures/{id}/history` | История версий по signatureId (ADMIN) |
+| GET | `/api/signatures/{id}/audit` | Аудит по signatureId (ADMIN) |
 
 Тестовые юзеры после старта: `admin` / `Admin123!@#`, `testuser` / `Test123!@#`.
 

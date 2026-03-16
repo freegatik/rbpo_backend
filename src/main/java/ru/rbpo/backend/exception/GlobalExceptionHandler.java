@@ -73,6 +73,20 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(InvalidSignatureDataException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidSignatureData(InvalidSignatureDataException ex) {
+        ErrorResponse body = new ErrorResponse(
+                LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), "Невалидные данные сигнатуры", ex.getMessage());
+        return ResponseEntity.badRequest().body(body);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
+        ErrorResponse body = new ErrorResponse(
+                LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), "Неверный параметр", ex.getMessage());
+        return ResponseEntity.badRequest().body(body);
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntime(RuntimeException ex) {
         ErrorResponse body = new ErrorResponse(
