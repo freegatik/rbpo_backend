@@ -28,6 +28,27 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(body);
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFound(ResourceNotFoundException ex) {
+        ErrorResponse body = new ErrorResponse(
+                LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), "Не найдено", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(LicenseForbiddenException.class)
+    public ResponseEntity<ErrorResponse> handleLicenseForbidden(LicenseForbiddenException ex) {
+        ErrorResponse body = new ErrorResponse(
+                LocalDateTime.now(), HttpStatus.FORBIDDEN.value(), "Доступ запрещён", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(LicenseConflictException.class)
+    public ResponseEntity<ErrorResponse> handleLicenseConflict(LicenseConflictException ex) {
+        ErrorResponse body = new ErrorResponse(
+                LocalDateTime.now(), HttpStatus.CONFLICT.value(), "Конфликт", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(TokenException.class)
     public ResponseEntity<ErrorResponse> handleTokenException(TokenException ex) {
         ErrorResponse body = new ErrorResponse(

@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: rbpo_backend_db
+    environment:
+      POSTGRES_DB: rbpodb
+      POSTGRES_USER: rbpo
+      POSTGRES_PASSWORD: rbpo
+    ports:
+      - "5434:5432"
+    volumes:
+      - rbpo_backend_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rbpo -d rbpodb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  rbpo_backend_pgdata:

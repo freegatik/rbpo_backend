@@ -9,7 +9,10 @@
     { "key": "accessToken", "value": "" },
     { "key": "refreshToken", "value": "" },
     { "key": "username", "value": "testuser" },
-    { "key": "password", "value": "Test123!@#" }
+    { "key": "password", "value": "Test123!@#" },
+    { "key": "activationKey", "value": "" },
+    { "key": "deviceMac", "value": "AA:BB:CC:DD:EE:01" },
+    { "key": "productId", "value": "1" }
   ],
   "item": [
     {
@@ -165,6 +168,88 @@
             "method": "GET",
             "header": [],
             "url": "{{baseUrl}}/api/auth/me"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Licenses",
+      "_postman_id": "d0e1f2a3-b4c5-3d4e-7f8a-9b0c1d2e3f4a",
+      "item": [
+        {
+          "name": "Create License",
+          "_postman_id": "e1f2a3b4-c5d6-4e5f-8a9b-0c1d2e3f4a5b",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var j = pm.response.json();",
+                  "if (j.code) pm.collectionVariables.set('activationKey', j.code);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 1,\n  \"typeId\": 1,\n  \"ownerId\": 2,\n  \"deviceCount\": 2,\n  \"description\": \"Test license\"\n}"
+            },
+            "url": "{{baseUrl}}/api/licenses",
+            "description": "Только ADMIN. В body не передавать id и code — их генерирует сервер. После ответа code сохраняется в переменную activationKey."
+          }
+        },
+        {
+          "name": "Activate License",
+          "_postman_id": "f2a3b4c5-d6e7-5f6a-9b0c-1d2e3f4a5b6c",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activationKey\": \"{{activationKey}}\",\n  \"deviceMac\": \"{{deviceMac}}\",\n  \"deviceName\": \"UserPC\"\n}"
+            },
+            "url": "{{baseUrl}}/api/licenses/activate"
+          }
+        },
+        {
+          "name": "Check License",
+          "_postman_id": "a3b4c5d6-e7f8-6a7b-0c1d-2e3f4a5b6c7d",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deviceMac\": \"{{deviceMac}}\",\n  \"productId\": {{productId}}\n}"
+            },
+            "url": "{{baseUrl}}/api/licenses/check"
+          }
+        },
+        {
+          "name": "Renew License",
+          "_postman_id": "b4c5d6e7-f8a9-7b8c-1d2e-3f4a5b6c7d8e",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activationKey\": \"{{activationKey}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/licenses/renew"
           }
         }
       ]
