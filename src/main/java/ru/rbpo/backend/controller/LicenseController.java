@@ -10,6 +10,7 @@ import ru.rbpo.backend.model.License;
 import ru.rbpo.backend.security.CurrentUserProvider;
 import ru.rbpo.backend.service.LicenseService;
 
+/** API лицензий: create (ADMIN), activate, check, renew. Ответы activate/check/renew — TicketResponse с ЭЦП. */
 @RestController
 @RequestMapping("/api/licenses")
 public class LicenseController {

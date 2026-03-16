@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+/** Маппинг исключений в HTTP-ответы (400, 401, 403, 404, 409 и т.д.) и единый формат тела ошибки. */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

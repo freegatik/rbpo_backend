@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+/** Генерация access/refresh JWT и парсинг (subject = userId, sessionId в claims). */
 @Component
 public class JwtTokenProvider {
 

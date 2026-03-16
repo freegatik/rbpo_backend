@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.rbpo.backend.model.User;
 import ru.rbpo.backend.repository.UserRepository;
 
+/** Загрузка User по username для аутентификации (логин/пароль). */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 

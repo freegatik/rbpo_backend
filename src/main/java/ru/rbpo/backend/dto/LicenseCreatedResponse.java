@@ -2,6 +2,7 @@ package ru.rbpo.backend.dto;
 
 import ru.rbpo.backend.model.License;
 
+/** Ответ 201 после POST /api/licenses. */
 public class LicenseCreatedResponse {
 
     private Long id;

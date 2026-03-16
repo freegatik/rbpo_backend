@@ -3,6 +3,7 @@ package ru.rbpo.backend.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+/** Справочник продуктов. Таблица product. */
 @Entity
 @Table(name = "product")
 public class Product {

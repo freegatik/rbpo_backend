@@ -1,5 +1,6 @@
 package ru.rbpo.backend.dto;
 
+/** Ответ login/refresh: accessToken, refreshToken. */
 public class TokenResponse {
 
     private String accessToken;

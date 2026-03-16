@@ -3,6 +3,7 @@ package ru.rbpo.backend.model;
 import jakarta.persistence.*;
 import java.time.Instant;
 
+/** Журнал событий по лицензии (CREATED, ACTIVATED, RENEWED). Таблица license_history. */
 @Entity
 @Table(name = "license_history")
 public class LicenseHistory {

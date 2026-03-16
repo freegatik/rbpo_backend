@@ -2,6 +2,7 @@ package ru.rbpo.backend.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
+/** Тело POST /api/auth/login. */
 public class LoginRequest {
 
     @NotBlank(message = "Имя пользователя не может быть пустым")

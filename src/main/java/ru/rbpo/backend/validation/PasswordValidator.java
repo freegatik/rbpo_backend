@@ -3,6 +3,7 @@ package ru.rbpo.backend.validation;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
+/** Проверка сложности пароля для аннотации @StrongPassword. */
 public class PasswordValidator implements ConstraintValidator<StrongPassword, String> {
 
     @Override

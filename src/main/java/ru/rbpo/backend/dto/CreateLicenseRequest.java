@@ -3,6 +3,7 @@ package ru.rbpo.backend.dto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
+/** Тело POST /api/licenses (productId, typeId, ownerId, deviceCount?, description?). */
 public class CreateLicenseRequest {
 
     @NotNull(message = "productId обязателен")

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import ru.rbpo.backend.model.Role;
 import ru.rbpo.backend.model.User;
 
+/** Текущий пользователь из SecurityContext (после JwtAuthenticationFilter). */
 @Component
 public class CurrentUserProvider {
 

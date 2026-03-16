@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/** user_sessions: по id, по refresh-токену. */
 @Repository
 public interface UserSessionRepository extends JpaRepository<UserSession, UUID> {
 

@@ -10,10 +10,7 @@ import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/**
- * Сервис ЭЦП: канонизация payload по RFC 8785 и подпись алгоритмом SHA256withRSA.
- * Результат подписи возвращается в Base64.
- */
+/** Подпись payload: канонический JSON (RFC 8785) → SHA256withRSA → Base64. Тикет и сигнатуры. */
 @Service
 public class SignatureService {
 
@@ -25,17 +22,11 @@ public class SignatureService {
         this.keyStoreLoader = keyStoreLoader;
     }
 
-    /**
-     * Подписывает тикет лицензии: приводится к каноническому JSON, подпись SHA256withRSA, результат Base64.
-     */
     public String signTicket(Ticket ticket) {
         Map<String, Object> payload = ticketToMap(ticket);
         return sign(payload);
     }
 
-    /**
-     * Подписывает произвольный payload (Map). Канонический JSON в UTF-8 → SHA256withRSA → Base64.
-     */
     public String sign(Map<String, Object> payload) {
         String canonical = JsonCanonicalizer.toCanonicalString(payload);
         byte[] utf8 = canonical.getBytes(StandardCharsets.UTF_8);
@@ -51,7 +42,6 @@ public class SignatureService {
         }
     }
 
-    /** Преобразование тикета в Map с фиксированным набором полей для канонизации. */
     private static Map<String, Object> ticketToMap(Ticket t) {
         Map<String, Object> m = new LinkedHashMap<>();
         m.put("activationDate", t.getActivationDate() != null ? t.getActivationDate().toString() : null);

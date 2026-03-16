@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+/** Тип лицензии (TRIAL, MONTH, YEAR и т.д.), длительность по умолчанию. Таблица license_type. */
 @Entity
 @Table(name = "license_type")
 public class LicenseType {

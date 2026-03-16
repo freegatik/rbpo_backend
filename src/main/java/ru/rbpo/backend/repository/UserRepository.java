@@ -6,6 +6,7 @@ import ru.rbpo.backend.model.User;
 
 import java.util.Optional;
 
+/** users: по id, по username. */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 

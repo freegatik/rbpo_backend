@@ -1,9 +1,6 @@
 package ru.rbpo.backend.model;
 
-/**
- * Статус записи антивирусной сигнатуры.
- * ACTUAL — актуальная запись, DELETED — логически удалённая.
- */
+/** ACTUAL — в полной выгрузке; DELETED — только в инкременте, не удаляем из БД. */
 public enum SignatureStatus {
     ACTUAL,
     DELETED

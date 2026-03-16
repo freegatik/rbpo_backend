@@ -6,6 +6,7 @@ import ru.rbpo.backend.model.Device;
 
 import java.util.Optional;
 
+/** device: по id, по mac_address. */
 @Repository
 public interface DeviceRepository extends JpaRepository<Device, Long> {
 

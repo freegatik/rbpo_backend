@@ -2,6 +2,7 @@ package ru.rbpo.backend.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
+/** Тело POST /api/licenses/activate (activationKey, deviceMac, deviceName?). */
 public class ActivateLicenseRequest {
 
     @NotBlank(message = "Ключ активации обязателен")

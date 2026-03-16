@@ -8,11 +8,7 @@ import java.io.InputStream;
 import java.security.*;
 import java.security.cert.Certificate;
 
-/**
- * Загрузка приватного ключа и сертификата из keystore.
- * Keystore загружается по пути из конфигурации (classpath:, file: или путь к файлу).
- * Ключи кэшируются в памяти после первой загрузки.
- */
+/** Загрузка приватного ключа и сертификата из keystore (путь из конфига). Кэш после первой загрузки. */
 @Component
 public class SignatureKeyStoreLoader {
 
@@ -27,9 +23,6 @@ public class SignatureKeyStoreLoader {
         this.resourceLoader = resourceLoader;
     }
 
-    /**
-     * Возвращает приватный ключ для подписи. Загружает keystore при первом вызове.
-     */
     public synchronized PrivateKey getPrivateKey() {
         if (privateKey == null) {
             loadKeyStore();
@@ -37,9 +30,6 @@ public class SignatureKeyStoreLoader {
         return privateKey;
     }
 
-    /**
-     * Возвращает сертификат (публичный ключ) для проверки подписи.
-     */
     public synchronized Certificate getCertificate() {
         if (certificate == null) {
             loadKeyStore();
@@ -59,7 +49,7 @@ public class SignatureKeyStoreLoader {
             String alias = properties.getKeyAlias();
             Key key = ks.getKey(alias, properties.getEffectiveKeyPassword().toCharArray());
             if (!(key instanceof PrivateKey)) {
-                throw new IllegalStateException("Запись " + alias + " не является приватным ключом");
+                throw new IllegalStateException("Запись " + alias + " — не приватный ключ");
             }
             this.privateKey = (PrivateKey) key;
             this.certificate = ks.getCertificate(alias);

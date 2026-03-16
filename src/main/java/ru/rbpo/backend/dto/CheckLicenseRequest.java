@@ -3,6 +3,7 @@ package ru.rbpo.backend.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+/** Тело POST /api/licenses/check (deviceMac, productId). */
 public class CheckLicenseRequest {
 
     @NotBlank(message = "MAC-адрес устройства обязателен")

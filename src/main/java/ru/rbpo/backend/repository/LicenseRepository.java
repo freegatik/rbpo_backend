@@ -10,12 +10,13 @@ import ru.rbpo.backend.model.License;
 import java.util.List;
 import java.util.Optional;
 
+/** license: по коду; активные по устройству/user/продукту (см. @Query). */
 @Repository
 public interface LicenseRepository extends JpaRepository<License, Long> {
 
     Optional<License> findByCode(String code);
 
-    /** Активные лицензии по устройству, пользователю и продукту (может быть несколько — берём с максимальным сроком). */
+    /** Активные по устройству, user и продукту; при нескольких — по максимальному ending_date. */
     @Query("SELECT l FROM License l " +
            "JOIN DeviceLicense dl ON dl.license = l AND dl.device = :device " +
            "WHERE l.user.id = :userId AND l.product.id = :productId " +

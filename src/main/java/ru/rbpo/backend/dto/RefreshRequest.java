@@ -2,6 +2,7 @@ package ru.rbpo.backend.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
+/** Тело POST /api/auth/refresh (refreshToken). */
 public class RefreshRequest {
 
     @NotBlank(message = "Refresh токен не может быть пустым")

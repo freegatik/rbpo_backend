@@ -12,9 +12,7 @@ import ru.rbpo.backend.repository.LicenseTypeRepository;
 import ru.rbpo.backend.repository.ProductRepository;
 import ru.rbpo.backend.repository.UserRepository;
 
-/**
- * Создаёт тестовых пользователей при первом запуске (как в music-streaming).
- */
+/** Тестовые пользователи (admin, testuser) и справочники при первом старте. */
 @Component
 public class DataInitializer implements CommandLineRunner {
 

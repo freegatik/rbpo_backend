@@ -3,6 +3,7 @@ package ru.rbpo.backend.model;
 import jakarta.persistence.*;
 import java.time.Instant;
 
+/** Связь лицензия–устройство (факт активации). Таблица device_license. */
 @Entity
 @Table(name = "device_license")
 public class DeviceLicense {

@@ -3,6 +3,7 @@ package ru.rbpo.backend.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+/** Устройство пользователя (MAC, имя). Таблица device. */
 @Entity
 @Table(name = "device")
 public class Device {

@@ -8,6 +8,7 @@ import ru.rbpo.backend.model.User;
 import java.util.Collection;
 import java.util.Collections;
 
+/** UserDetails-адаптер для User (роли, username, password) — используется Spring Security после JWT. */
 public class SecurityUser implements UserDetails {
 
     private final User user;

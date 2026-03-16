@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.UUID;
 
+/** Сессия пользователя (refresh token). Таблица user_sessions. */
 @Entity
 @Table(name = "user_sessions")
 public class UserSession {

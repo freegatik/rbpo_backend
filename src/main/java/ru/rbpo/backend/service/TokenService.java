@@ -14,6 +14,7 @@ import ru.rbpo.backend.security.JwtTokenProvider;
 import java.time.Instant;
 import java.util.UUID;
 
+/** Выдача и проверка JWT (access/refresh), хранение сессий в user_sessions. */
 @Service
 public class TokenService {
 

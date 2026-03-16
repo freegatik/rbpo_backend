@@ -4,33 +4,24 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.Instant;
 
-/**
- * Тикет для передачи информации о лицензии клиентам.
- */
+/** Поля тикета лицензии (ответ activate/check/renew). serverDate, ttl, даты, userId, deviceId, blocked. */
 public class Ticket {
 
-    /** Текущая дата/время сервера */
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Instant serverDate;
 
-    /** Время жизни тикета (секунды) */
     private long ttlSeconds;
 
-    /** Дата первой активации лицензии */
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Instant activationDate;
 
-    /** Дата истечения лицензии */
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Instant expiryDate;
 
-    /** Идентификатор пользователя */
     private Long userId;
 
-    /** Идентификатор устройства */
     private Long deviceId;
 
-    /** Флаг блокировки лицензии */
     private boolean blocked;
 
     public Ticket() {

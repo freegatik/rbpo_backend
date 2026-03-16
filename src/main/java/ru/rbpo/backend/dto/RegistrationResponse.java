@@ -1,5 +1,6 @@
 package ru.rbpo.backend.dto;
 
+/** Ответ после успешной регистрации (id, username). */
 public class RegistrationResponse {
 
     private Long id;

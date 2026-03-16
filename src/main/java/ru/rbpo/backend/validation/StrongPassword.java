@@ -5,6 +5,7 @@ import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
+/** Ограничение пароля: длина, цифра, буква, спецсимвол. Валидация в PasswordValidator. */
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = PasswordValidator.class)

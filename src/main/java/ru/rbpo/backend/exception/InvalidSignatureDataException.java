@@ -1,8 +1,6 @@
 package ru.rbpo.backend.exception;
 
-/**
- * Невалидные данные сигнатуры — возвращаем 400 Bad Request.
- */
+/** Невалидные данные сигнатуры/запроса → 400 в GlobalExceptionHandler. */
 public class InvalidSignatureDataException extends RuntimeException {
 
     public InvalidSignatureDataException(String message) {

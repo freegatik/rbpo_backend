@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import ru.rbpo.backend.validation.StrongPassword;
 
+/** Тело POST /api/auth/register. */
 public class RegistrationRequest {
 
     @NotBlank(message = "Имя пользователя для входа не может быть пустым")

@@ -2,6 +2,7 @@ package ru.rbpo.backend.dto;
 
 import ru.rbpo.backend.model.Role;
 
+/** Ответ GET /api/auth/me. */
 public class CurrentUserResponse {
 
     private Long id;

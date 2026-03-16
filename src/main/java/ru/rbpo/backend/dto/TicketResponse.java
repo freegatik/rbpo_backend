@@ -1,12 +1,9 @@
 package ru.rbpo.backend.dto;
 
-/**
- * Ответ с тикетом и ЭЦП на его основе.
- */
+/** Ответ activate/check/renew: тикет + подпись ЭЦП (Base64). */
 public class TicketResponse {
 
     private Ticket ticket;
-    /** Подпись (ЭЦП) тикета — HMAC-SHA256 в Base64 */
     private String signature;
 
     public TicketResponse() {

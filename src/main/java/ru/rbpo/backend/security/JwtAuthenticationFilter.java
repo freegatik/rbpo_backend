@@ -14,6 +14,7 @@ import ru.rbpo.backend.repository.UserRepository;
 
 import java.io.IOException;
 
+/** Извлекает JWT из заголовка Authorization, валидирует через TokenService, кладёт Authentication в SecurityContext. */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 

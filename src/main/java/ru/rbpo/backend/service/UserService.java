@@ -8,6 +8,7 @@ import ru.rbpo.backend.model.Role;
 import ru.rbpo.backend.model.User;
 import ru.rbpo.backend.repository.UserRepository;
 
+/** Регистрация пользователя; загрузка по username для Spring Security. */
 @Service
 public class UserService {
 

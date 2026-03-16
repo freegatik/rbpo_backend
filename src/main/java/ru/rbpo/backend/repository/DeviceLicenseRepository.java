@@ -10,6 +10,7 @@ import ru.rbpo.backend.model.License;
 
 import java.util.Optional;
 
+/** device_license: связь лицензия–устройство, проверка дубля. */
 @Repository
 public interface DeviceLicenseRepository extends JpaRepository<DeviceLicense, Long> {
 

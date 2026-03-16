@@ -16,6 +16,7 @@ import ru.rbpo.backend.security.SecurityUser;
 import ru.rbpo.backend.service.TokenService;
 import ru.rbpo.backend.service.UserService;
 
+/** API аутентификации: register, login, refresh, me. */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {

@@ -4,19 +4,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- * Канонизация JSON по правилам RFC 8785 (JCS): детерминированный порядок свойств,
- * без пробелов, экранирование строк по спецификации. Обеспечивает воспроизводимость подписи.
- * @see <a href="https://datatracker.ietf.org/doc/html/rfc8785">RFC 8785</a>
- */
+/** RFC 8785 (JCS): один и тот же JSON → одна и та же строка (иначе подпись не сойдётся). */
 public final class JsonCanonicalizer {
 
     private JsonCanonicalizer() { }
 
-    /**
-     * Преобразует объект (Map, List, примитивы) в каноническую JSON-строку в UTF-8.
-     * Имена свойств объектов сортируются лексикографически (UTF-16 code units).
-     */
     public static String toCanonicalString(Object value) {
         StringBuilder sb = new StringBuilder();
         appendValue(value, sb);
@@ -56,7 +48,6 @@ public final class JsonCanonicalizer {
         throw new IllegalArgumentException("Неподдерживаемый тип для канонизации: " + value.getClass().getName());
     }
 
-    /** Сериализация числа в стиле ECMAScript (целое без дробной части, иначе — число с точкой). */
     private static void appendNumber(Number n, StringBuilder sb) {
         if (n instanceof Long || n instanceof Integer || n instanceof Short || n instanceof Byte) {
             sb.append(n.longValue());
@@ -74,7 +65,6 @@ public final class JsonCanonicalizer {
         }
     }
 
-    /** Экранирование строки по RFC 8785 / ECMAScript: ", \, управляющие символы. */
     private static void appendString(String s, StringBuilder sb) {
         sb.append('"');
         for (int i = 0; i < s.length(); i++) {

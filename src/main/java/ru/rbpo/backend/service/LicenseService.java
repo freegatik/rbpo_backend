@@ -14,6 +14,7 @@ import ru.rbpo.backend.signature.SignatureService;
 import java.time.Instant;
 import java.util.UUID;
 
+/** Лицензии: создание, активация по ключу+устройству, проверка по device+product, продление. Тикет с ЭЦП через SignatureService. */
 @Service
 public class LicenseService {
 
@@ -29,7 +30,7 @@ public class LicenseService {
     @Value("${license.ticket-ttl-seconds:3600}")
     private long ticketTtlSeconds;
 
-    /** Дней до истечения, при которых разрешено продление (по методичке: истекает <= 7 дней или неактивна) */
+    /** Продление разрешено за 7 дней до истечения или при неактивной лицензии (методичка). */
     private static final int RENEW_WITHIN_DAYS = 7;
 
     public LicenseService(ProductRepository productRepository,

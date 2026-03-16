@@ -22,6 +22,7 @@ import ru.rbpo.backend.security.JwtAuthenticationFilter;
 
 import java.io.IOException;
 
+/** JWT-фильтр, правила по ролям (auth без токена, licenses/signatures — USER/ADMIN), 401/403 в JSON. */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity

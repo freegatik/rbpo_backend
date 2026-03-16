@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Лицензия (активационный ключ, продукт, тип, владелец, даты, лимит устройств). Таблица license. */
 @Entity
 @Table(name = "license")
 public class License {
