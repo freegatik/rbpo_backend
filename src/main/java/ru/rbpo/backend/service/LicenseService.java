@@ -116,7 +116,7 @@ public class LicenseService {
             throw new LicenseForbiddenException("Устройство принадлежит другому пользователю");
         }
 
-        boolean firstActivation = (license.getUser() == null);
+        boolean firstActivation = isFirstActivation(license);
 
         if (firstActivation) {
             license.setUser(userRepository.getReferenceById(userId));
@@ -183,19 +183,29 @@ public class LicenseService {
             throw new LicenseConflictException("Лицензия или продукт заблокированы");
         }
 
-        Instant now = Instant.now();
-        Instant ending = license.getEndingDate();
-        long daysUntilExpiry = ending != null ? (ending.getEpochSecond() - now.getEpochSecond()) / 86400 : 0;
-        boolean canRenew = (ending == null) || (daysUntilExpiry <= RENEW_WITHIN_DAYS);
-        if (!canRenew) {
-            throw new LicenseConflictException(
-                    "Продление возможно не ранее чем за " + RENEW_WITHIN_DAYS + " дней до истечения. Сейчас до истечения: " + daysUntilExpiry + " дн. Проверьте, что в запросе тот же activationKey, по которому делали UPDATE в БД.");
+        if (license.getFirstActivationDate() == null) {
+            throw new LicenseConflictException("Сначала активируйте лицензию (нет даты первой активации).");
         }
 
+        Instant now = Instant.now();
+        Instant endingBefore = license.getEndingDate();
         int days = license.getType().getDefaultDurationInDays() != null
                 ? license.getType().getDefaultDurationInDays() : 365;
-        Instant newEnding = (ending != null && ending.isAfter(now)) ? ending.plusSeconds(days * 86400L) : now.plusSeconds(days * 86400L);
-        license.setEndingDate(newEnding);
+        long durationSeconds = days * 86400L;
+
+        if (endingBefore == null) {
+            license.setEndingDate(now.plusSeconds(durationSeconds));
+        } else {
+            long daysUntilExpiry = (endingBefore.getEpochSecond() - now.getEpochSecond()) / 86400;
+            if (daysUntilExpiry > RENEW_WITHIN_DAYS) {
+                throw new LicenseConflictException(
+                        "Продление возможно не ранее чем за " + RENEW_WITHIN_DAYS + " дней до истечения. Сейчас до истечения: " + daysUntilExpiry + " дн.");
+            }
+            Instant newEnding = endingBefore.isAfter(now)
+                    ? endingBefore.plusSeconds(durationSeconds)
+                    : now.plusSeconds(durationSeconds);
+            license.setEndingDate(newEnding);
+        }
         licenseRepository.save(license);
 
         LicenseHistory history = new LicenseHistory();
@@ -203,10 +213,17 @@ public class LicenseService {
         history.setUser(userRepository.getReferenceById(userId));
         history.setStatus(LicenseHistoryStatus.RENEWED);
         history.setChangeDate(Instant.now());
-        history.setDescription("Продление лицензии");
+        history.setDescription(endingBefore == null
+                ? "Продление: выставлена ending_date (ранее была null)"
+                : "Продление лицензии");
         licenseHistoryRepository.save(history);
 
         return buildTicketResponse(license, null);
+    }
+
+    /** Первая активация: после создания лицензии поле user ещё null (не привязан активировавший пользователь). */
+    private static boolean isFirstActivation(License license) {
+        return license.getUser() == null;
     }
 
     private TicketResponse buildTicketResponse(License license, Device device) {

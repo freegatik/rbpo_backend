@@ -66,10 +66,10 @@ chmod +x scripts/setup-db.sh && ./scripts/setup-db.sh
 
 **Создание лицензии.** POST /api/licenses. Проверки: продукт, тип, владелец (404 при отсутствии). Генерация кода, запись в license и license_history (CREATED). Ответ 201.
 
-**Активация.** POST /api/licenses/activate. Лицензия по коду; при первой активации — user, ending_date, device_license, история ACTIVATED; при повторной — проверка лимита устройств (409 при превышении). Ответ 200, TicketResponse.
+**Активация.** POST /api/licenses/activate. Лицензия по коду. **Первая активация** в коде: `user_id` ещё null (после создания лицензии админом). Тогда выставляются user, first_activation_date, ending_date и device_license; в истории — «Первая активация». Иначе — только доп. устройство, лимит device_count (409 при превышении). Ответ 200, TicketResponse.
 
 **Проверка.** POST /api/licenses/check. Устройство по MAC; активная лицензия по device, user, product (не заблокирована, ending_date >= now). Ответ 200, TicketResponse.
 
-**Продление.** POST /api/licenses/renew. Лицензия по коду; проверка владельца (403); продление разрешено за 7 дней до истечения или при неактивной лицензии (409 иначе). Обновление ending_date, запись RENEWED в историю. Ответ 200, TicketResponse.
+**Продление.** POST /api/licenses/renew. Нужны активированная лицензия (`user_id` и `first_activation_date` заданы). Если `ending_date` null — выставляется срок «с сейчас» на default_duration (без окна в 7 дней). Если `ending_date` задана — как в методичке: не раньше чем за 7 дней до истечения (или уже просрочена). Ответ 200, TicketResponse.
 
 **Тикет и ЭЦП.** Ticket: serverDate, ttlSeconds, activationDate, expiryDate, userId, deviceId, blocked. TicketResponse = тикет + подпись. Подпись: канонический JSON (RFC 8785) → SHA256withRSA → Base64. Проверка на клиенте: та же канонизация, верификация публичным ключом из сертификата.
