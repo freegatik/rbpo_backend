@@ -3,7 +3,7 @@
     "_postman_id": "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
     "name": "RBPO Backend",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": "1) Выполните **Login as ADMIN** — токен сохранится в accessToken.\n2) **Signatures**: сначала **Create signature** — в ответе будет id, он сохранится в signatureId. После этого работают Update, Delete, Get by IDs, Get history, Get audit.\n3) baseUrl по умолчанию http://localhost:8081."
+    "description": "1) Выполните **Login as ADMIN** — токен сохранится в accessToken.\n2) **Signatures**: сначала **Create signature** — в ответе будет id, он сохранится в signatureId. После этого работают Update, Delete, Get by IDs, Get history, Get audit.\n3) **Signatures binary**: после логина USER/ADMIN — **GET full** / **GET increment** / **POST by-ids**; ответ `multipart/mixed` (manifest.bin + data.bin), см. методичку multipart.md.\n4) baseUrl по умолчанию http://localhost:8081."
   },
   "variable": [
     { "key": "baseUrl", "value": "http://localhost:8081" },
@@ -14,7 +14,8 @@
     { "key": "activationKey", "value": "" },
     { "key": "deviceMac", "value": "AA:BB:CC:DD:EE:01" },
     { "key": "productId", "value": "1" },
-    { "key": "signatureId", "value": "00000000-0000-0000-0000-000000000001" }
+    { "key": "signatureId", "value": "00000000-0000-0000-0000-000000000001" },
+    { "key": "binarySince", "value": "2020-01-01T00:00:00Z" }
   ],
   "item": [
     {
@@ -371,6 +372,57 @@
             "header": [ { "key": "Authorization", "value": "Bearer {{accessToken}}" } ],
             "url": "{{baseUrl}}/api/signatures/{{signatureId}}/audit",
             "description": "Аудит действий по signatureId. Только ADMIN."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Signatures binary",
+      "_postman_id": "b6c7d8e9-f0a1-7b8c-9d0e-1f2a3b4c5d6e",
+      "description": "Задание 5: бинарная выдача сигнатур. Ответ `200` с `Content-Type: multipart/mixed`: части **manifest.bin** и **data.bin** (application/octet-stream). Нужен Bearer-токен (USER или ADMIN).",
+      "item": [
+        {
+          "name": "GET full (multipart/mixed)",
+          "_postman_id": "c7d8e9f0-a1b2-8c9d-0e1f-2a3b4c5d6e7f",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Accept", "value": "multipart/mixed,*/*" }
+            ],
+            "url": "{{baseUrl}}/api/binary/signatures/full",
+            "description": "Полная выгрузка только ACTUAL. Тело ответа — не JSON, а два бинарных файла в multipart."
+          }
+        },
+        {
+          "name": "GET increment (multipart/mixed)",
+          "_postman_id": "d8e9f0a1-b2c3-9d0e-1f2a-3b4c5d6e7f8a",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Accept", "value": "multipart/mixed,*/*" }
+            ],
+            "url": "{{baseUrl}}/api/binary/signatures/increment?since={{binarySince}}",
+            "description": "Инкремент: записи с updatedAt > since (включая DELETED). Параметр since обязателен (ISO-8601). Меняйте переменную binarySince."
+          }
+        },
+        {
+          "name": "POST by-ids (multipart/mixed)",
+          "_postman_id": "e9f0a1b2-c3d4-0e1f-2a3b-4c5d6e7f8a9b",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Accept", "value": "multipart/mixed,*/*" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ids\": [\"{{signatureId}}\"]\n}"
+            },
+            "url": "{{baseUrl}}/api/binary/signatures/by-ids",
+            "description": "Бинарная выдача по списку UUID. Возвращаются только найденные записи."
           }
         }
       ]

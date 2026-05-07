@@ -58,7 +58,11 @@ chmod +x scripts/setup-db.sh && ./scripts/setup-db.sh
 | DELETE | `/api/signatures/{id}`                     | Логическое удаление (ADMIN)                       |
 | GET    | `/api/signatures/{id}/history`             | История (ADMIN)                                   |
 | GET    | `/api/signatures/{id}/audit`               | Аудит (ADMIN)                                     |
+| GET    | `/api/binary/signatures/full`              | Бинарная полная выгрузка (`multipart/mixed`)      |
+| GET    | `/api/binary/signatures/increment?since=`  | Бинарный инкремент (`since` ISO-8601 обязателен)  |
+| POST   | `/api/binary/signatures/by-ids`            | Бинарная выдача по телу `{ "ids": [uuid…] }`      |
 
+Формат потоков описан в [multipart.md](https://github.com/MatorinFedor/RBPO_2025_demo/blob/master/files/multipart.md): части `manifest.bin` и `data.bin`, числа Big-endian. Префиксы magic `MF-` / `DB-` задаются суффиксом фамилии: `rbpo.binary-format.student-surname` или `RBPO_BINARY_STUDENT_SURNAME` (по умолчанию `RBPO`). Подпись манифеста — SHA256withRSA по байтам неподписанного манифеста (`SignatureService.signBytes`).
 
 Тестовые пользователи: `admin` / `Admin123!@#`, `testuser` / `Test123!@#`.
 

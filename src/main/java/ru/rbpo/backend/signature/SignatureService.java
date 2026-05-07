@@ -30,15 +30,23 @@ public class SignatureService {
     public String sign(Map<String, Object> payload) {
         String canonical = JsonCanonicalizer.toCanonicalString(payload);
         byte[] utf8 = canonical.getBytes(StandardCharsets.UTF_8);
+        byte[] raw = signBytes(utf8);
+        return Base64.getEncoder().encodeToString(raw);
+    }
+
+    /** Подпись готового массива байт (манифест binary API и др.). */
+    public byte[] signBytes(byte[] data) {
+        if (data == null) {
+            throw new IllegalArgumentException("data не может быть null");
+        }
         try {
             PrivateKey key = keyStoreLoader.getPrivateKey();
             Signature sig = Signature.getInstance(SIGNATURE_ALGORITHM);
             sig.initSign(key);
-            sig.update(utf8);
-            byte[] signatureBytes = sig.sign();
-            return Base64.getEncoder().encodeToString(signatureBytes);
+            sig.update(data);
+            return sig.sign();
         } catch (Exception e) {
-            throw new IllegalStateException("Ошибка подписи: " + e.getMessage(), e);
+            throw new IllegalStateException("Ошибка подписи байтов: " + e.getMessage(), e);
         }
     }
 
