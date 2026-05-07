@@ -4,7 +4,14 @@ Spring Boot, JWT (access/refresh), роли USER/ADMIN/GUEST, PostgreSQL. Java 2
 
 ## Запуск
 
-**Docker (БД проекта):**
+**К какой БД подключается приложение**
+
+| Режим | Условие | Подключение |
+|--------|---------|-------------|
+| Дефолт в `application.properties` | Нет `DB_URL` / `DB_USERNAME` | `localhost:5432/rbpodb`, юзер `${USER}` (логин в ОС) |
+| Docker из репо | `export` как ниже после `docker compose up` | `localhost:5434/rbpodb`, `rbpo` / `rbpo` |
+
+**Docker: Postgres + веб-интерфейс (pgAdmin)**
 
 ```bash
 docker compose up -d
@@ -14,7 +21,10 @@ export DB_PASSWORD=rbpo
 ./run-local.sh
 ```
 
-Контейнер `rbpo_backend_db`, порт 5434. psql: `docker exec -it rbpo_backend_db psql -U rbpo -d rbpodb`.
+- Браузер: **http://localhost:5051** — pgAdmin. Логин: `admin@example.com`, пароль: `admin` (или задай `PGADMIN_EMAIL` / `PGADMIN_PASSWORD` перед `up`; адрес должен быть «настоящим» для pgAdmin, не `*.local`).
+- В pgAdmin: Add New Server → Connection: Host **db**, Port **5432**, DB **rbpodb**, User **rbpo**, Password **rbpo** (`db` — имя сервиса в compose).
+
+Контейнер БД: `rbpo_backend_db`, с хоста порт **5434**. psql: `docker exec -it rbpo_backend_db psql -U rbpo -d rbpodb`.
 
 **Локальный PostgreSQL:**
 
