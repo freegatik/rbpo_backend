@@ -31,6 +31,45 @@ services:
     volumes:
       - rbpo_backend_pgadmin:/var/lib/pgadmin
 
+  minio:
+    image: minio/minio:latest
+    container_name: rbpo_backend_minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadminsecret}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - rbpo_backend_minio:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  minio-init:
+    image: minio/mc:latest
+    container_name: rbpo_backend_minio_init
+    depends_on:
+      minio:
+        condition: service_healthy
+    restart: "no"
+    environment:
+      MINIO_HOST: minio
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadminsecret}
+      MINIO_APP_USER: ${MINIO_APP_USER:-rbpoapp}
+      MINIO_APP_SECRET: ${MINIO_APP_SECRET:-rbpoappsecret}
+      MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME:-rbpo-signature-files}
+      MINIO_POLICY_FILE: /policy/minio-init-policy.json
+    volumes:
+      - ./docker/minio-init.sh:/init.sh:ro
+      - ./docker/minio-init-policy.json:/policy/minio-init-policy.json:ro
+    entrypoint: ["/bin/sh", "/init.sh"]
+
 volumes:
   rbpo_backend_pgdata:
   rbpo_backend_pgadmin:
+  rbpo_backend_minio:

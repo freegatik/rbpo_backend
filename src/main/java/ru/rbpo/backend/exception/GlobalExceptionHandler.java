@@ -88,6 +88,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(body);
     }
 
+    @ExceptionHandler(StorageException.class)
+    public ResponseEntity<ErrorResponse> handleStorage(StorageException ex) {
+        ErrorResponse body = new ErrorResponse(
+                LocalDateTime.now(), HttpStatus.SERVICE_UNAVAILABLE.value(), "Хранилище недоступно",
+                ex.getMessage() != null ? ex.getMessage() : "Ошибка объектного хранилища");
+        return new ResponseEntity<>(body, HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntime(RuntimeException ex) {
         ErrorResponse body = new ErrorResponse(

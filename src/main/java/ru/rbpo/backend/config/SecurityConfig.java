@@ -63,6 +63,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/binary/signatures/full").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/binary/signatures/increment").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/binary/signatures/by-ids").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/signatures/files/**").hasRole("ADMIN")
                         .requestMatchers("/actuator/health").permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(exceptions -> exceptions

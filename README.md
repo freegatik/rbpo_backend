@@ -26,6 +26,16 @@ export DB_PASSWORD=rbpo
 
 Контейнер БД: `rbpo_backend_db`, с хоста порт **5434**. psql: `docker exec -it rbpo_backend_db psql -U rbpo -d rbpodb`.
 
+**MinIO (файлы сигнатур, задание 6):** после `docker compose up -d` доступны API **9000**, консоль **9001** ([образ](https://hub.docker.com/r/minio/minio)). Сервис `minio-init` создаёт приватный bucket **`rbpo-signature-files`** и пользователя **`rbpoapp`** / **`rbpoappsecret`** (не root). Для приложения на хосте:
+
+```bash
+export MINIO_ENDPOINT=http://127.0.0.1:9000
+export MINIO_ACCESS_KEY=rbpoapp
+export MINIO_SECRET_KEY=rbpoappsecret
+```
+
+Root (`MINIO_ROOT_*`) только для администрирования MinIO; Spring использует ключи **`MINIO_ACCESS_KEY`** / **`MINIO_SECRET_KEY`**.
+
 **Локальный PostgreSQL:**
 
 ```bash
@@ -61,6 +71,8 @@ chmod +x scripts/setup-db.sh && ./scripts/setup-db.sh
 | GET    | `/api/binary/signatures/full`              | Бинарная полная выгрузка (`multipart/mixed`)      |
 | GET    | `/api/binary/signatures/increment?since=`  | Бинарный инкремент (`since` ISO-8601 обязателен)  |
 | POST   | `/api/binary/signatures/by-ids`            | Бинарная выдача по телу `{ "ids": [uuid…] }`      |
+| POST   | `/api/signatures/files/upload`             | Загрузка файла → расчёт полей + MinIO (ADMIN)    |
+| POST   | `/api/signatures/files/presigned-urls`    | Presigned GET по `{ "ids": [...] }` (ADMIN)       |
 
 Формат потоков описан в [multipart.md](https://github.com/MatorinFedor/RBPO_2025_demo/blob/master/files/multipart.md): части `manifest.bin` и `data.bin`, числа Big-endian. Префиксы magic `MF-` / `DB-` задаются суффиксом фамилии: `rbpo.binary-format.student-surname` или `RBPO_BINARY_STUDENT_SURNAME` (по умолчанию `RBPO`). Подпись манифеста — SHA256withRSA по байтам неподписанного манифеста (`SignatureService.signBytes`).
 
