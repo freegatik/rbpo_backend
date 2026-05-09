@@ -8,18 +8,17 @@ Spring Boot, JWT (access/refresh), роли USER/ADMIN/GUEST, PostgreSQL. Java 2
 
 | Режим | Условие | Подключение |
 |--------|---------|-------------|
-| Дефолт в `application.properties` | Нет `DB_URL` / `DB_USERNAME` | `localhost:5432/rbpodb`, юзер `${USER}` (логин в ОС) |
-| Docker из репо | `export` как ниже после `docker compose up` | `localhost:5434/rbpodb`, `rbpo` / `rbpo` |
+| Дефолт в `application.properties` | Нет переопределения `DB_*` | `localhost:5434/rbpodb`, `rbpo` / `rbpo` (как в Docker Compose) |
+| Свой PostgreSQL | задать `DB_URL` / при необходимости `DB_USERNAME` / `DB_PASSWORD` | например `localhost:5432`, свой пользователь |
 
 **Docker: Postgres + веб-интерфейс (pgAdmin)**
 
 ```bash
 docker compose up -d
-export DB_URL=jdbc:postgresql://localhost:5434/rbpodb
-export DB_USERNAME=rbpo
-export DB_PASSWORD=rbpo
-./run-local.sh
+./scripts/run-local.sh
 ```
+
+Без `export` приложение уже нацелено на эту БД. При необходимости переопредели `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`.
 
 - Браузер: **http://localhost:5051** — pgAdmin. Логин: `admin@example.com`, пароль: `admin` (или задай `PGADMIN_EMAIL` / `PGADMIN_PASSWORD` перед `up`; адрес должен быть «настоящим» для pgAdmin, не `*.local`).
 - В pgAdmin: Add New Server → Connection: Host **db**, Port **5432**, DB **rbpodb**, User **rbpo**, Password **rbpo** (`db` — имя сервиса в compose).
@@ -36,14 +35,16 @@ export MINIO_SECRET_KEY=rbpoappsecret
 
 Root (`MINIO_ROOT_*`) только для администрирования MinIO; Spring использует ключи **`MINIO_ACCESS_KEY`** / **`MINIO_SECRET_KEY`**.
 
-**Локальный PostgreSQL:**
+**Локальный PostgreSQL (не Docker):** подними БД и задай подключение, например:
 
 ```bash
-chmod +x scripts/setup-db.sh && ./scripts/setup-db.sh
-./run-local.sh
+export DB_URL=jdbc:postgresql://localhost:5432/rbpodb
+export DB_USERNAME=myuser
+export DB_PASSWORD=mypass
+./scripts/run-local.sh
 ```
 
-Порт 8081. Дефолт БД: `rbpodb` / `rbpo` / `rbpo`. Свои переменные — [SECRETS.md](docs/SECRETS.md).
+Порт 8081. Свои переменные — [SECRETS.md](docs/SECRETS.md).
 
 **ЭЦП.** Тикет в activate/check/renew подписывается SHA256withRSA (канонический JSON по RFC 8785). Keystore по умолчанию: `classpath:signing.jks` (пароль `changeit`). Свой keystore: `./scripts/create-signing-keystore.sh`.
 

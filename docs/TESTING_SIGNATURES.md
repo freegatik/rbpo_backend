@@ -11,7 +11,7 @@ URL: http://localhost:8081. Токен: после Login подставить в
 
 **Ошибка «value too long for type character varying(255)» при Create signature:** колонка `digital_signature_base64` в БД была создана с лимитом 255. Нужно расширить до text.
 
-На хосте (приложение к localhost:5432, пользователь = тот же, что в приложении, обычно $USER):
+Если используешь **локальный** Postgres на `5432` (переопределил `DB_*`), с тем же пользователем, что в приложении:
 
 ```bash
 psql -h localhost -p 5432 -U <пользователь> -d rbpodb -c "
