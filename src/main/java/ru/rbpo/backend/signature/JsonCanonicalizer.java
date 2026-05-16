@@ -67,26 +67,41 @@ public final class JsonCanonicalizer {
 
     private static void appendString(String s, StringBuilder sb) {
         sb.append('"');
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            switch (c) {
-                case '"' -> sb.append("\\\"");
-                case '\\' -> sb.append("\\\\");
-                case '\b' -> sb.append("\\b");
-                case '\t' -> sb.append("\\t");
-                case '\n' -> sb.append("\\n");
-                case '\f' -> sb.append("\\f");
-                case '\r' -> sb.append("\\r");
-                default -> {
-                    if (c >= 0x00 && c <= 0x1F) {
-                        sb.append("\\u").append(String.format("%04x", (int) c));
-                    } else {
-                        sb.append(c);
-                    }
+        for (int i = 0; i < s.length(); ) {
+            int cp = s.codePointAt(i);
+            int charCount = Character.charCount(cp);
+            if (cp >= Character.MIN_SURROGATE && cp <= Character.MAX_SURROGATE) {
+                throw new IllegalArgumentException(
+                        "Строка содержит одиночный суррогат U+" + String.format("%04X", cp) + " (RFC 8785)");
+            }
+            if (charCount == 2) {
+                appendEscapedChar(s.charAt(i), sb);
+                appendEscapedChar(s.charAt(i + 1), sb);
+            } else {
+                appendEscapedChar((char) cp, sb);
+            }
+            i += charCount;
+        }
+        sb.append('"');
+    }
+
+    private static void appendEscapedChar(char c, StringBuilder sb) {
+        switch (c) {
+            case '"' -> sb.append("\\\"");
+            case '\\' -> sb.append("\\\\");
+            case '\b' -> sb.append("\\b");
+            case '\t' -> sb.append("\\t");
+            case '\n' -> sb.append("\\n");
+            case '\f' -> sb.append("\\f");
+            case '\r' -> sb.append("\\r");
+            default -> {
+                if (c >= 0x00 && c <= 0x1F) {
+                    sb.append("\\u").append(String.format("%04x", (int) c));
+                } else {
+                    sb.append(c);
                 }
             }
         }
-        sb.append('"');
     }
 
     private static void appendObject(Map<String, Object> map, StringBuilder sb) {

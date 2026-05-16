@@ -8,8 +8,9 @@ group = 'ru.rbpo'
 version = '1.0.0'
 
 java {
-    sourceCompatibility = '21'
-    targetCompatibility = '21'
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 repositories {
